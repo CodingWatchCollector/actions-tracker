@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./globals.css" />
+    <title>Трекер прогресу</title>
+  </head>
+  <body>
+    <ul id="names">
+      <h1>Події:</h1>
+    </ul>
+    <button onclick="openDialog()">Нова подія</button>
+    <dialog id="new-form-dialog">
+      <form id="new-form" class="stack">
+        <h2>Копінг-картка</h2>
+        <div>
+          <label for="event-type">Схема</label>
+          <select class="input" id="event-type" name="event-type" required>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+            <option>9</option>
+            <option>10</option>
+            <option>11</option>
+          </select>
+        </div>
+        <div class="event-wrapper">
+          <label for="event">Що трапилось</label>
+          <input
+            required
+            class="input"
+            name="event"
+            id="event"
+            autocomplete="eventName"
+          />
+        </div>
+        <div>
+          <label for="emotions">Емоції</label>
+          <span class="block label-desc" id="emotions-desc"
+            >Що я відчуваю і що готова(ий) зробити</span
+          >
+          <textarea
+            class="input"
+            name="emotions"
+            aria-describedby="emotions-desc"
+            id="emotions"
+          ></textarea>
+        </div>
+        <div>
+          <label for="thoughts">Думки</label>
+          <span class="block label-desc" id="thoughts-desc"
+            >Про що я думаю і чого боюсь</span
+          >
+          <textarea
+            class="input"
+            aria-describedby="thoughts-desc"
+            name="thoughts"
+            id="thoughts"
+          ></textarea>
+        </div>
+        <div>
+          <label for="actual-behavior">Фактична поведінка</label>
+          <span class="block label-desc" id="actual-behavior-desc"
+            >Що я роблю</span
+          >
+          <textarea
+            class="input"
+            aria-describedby="actual-behavior-desc"
+            name="actual-behavior"
+            id="actual-behavior"
+          ></textarea>
+        </div>
+        <div>
+          <label for="not-satisf-needs">Які мої потреби не задоволені</label>
+          <span class="block label-desc" id="not-satisf-needs-desc"
+            >Що мені потрібно щоб відчувати себе краще</span
+          >
+          <textarea
+            class="input"
+            aria-describedby="not-satisf-needs-desc"
+            name="not-satisf-needs"
+            id="not-satisf-needs"
+          ></textarea>
+        </div>
+        <div>
+          <label for="care-for-needs">Як я можу подбати про свої потреби</label>
+          <span class="block label-desc" id="care-for-needs-desc"
+            >Як я сам можу подбати про ці мої потреби</span
+          >
+          <textarea
+            class="input"
+            aria-describedby="care-for-needs-desc"
+            name="care-for-needs"
+            id="care-for-needs"
+          ></textarea>
+        </div>
+        <div>
+          <label for="rational-view">Здоровий погляд</label>
+          <span class="block label-desc" id="rational-view-desc"
+            >Що реально відбувається</span
+          >
+          <textarea
+            class="input"
+            aria-describedby="rational-view-desc"
+            name="rational-view"
+            id="rational-view"
+          ></textarea>
+        </div>
+        <div>
+          <label for="real-problems">Реальні проблеми</label>
+          <span class="block label-desc" id="real-problems-desc"
+            >В чому реальні труднощі</span
+          >
+          <textarea
+            class="input"
+            aria-describedby="real-problems-desc"
+            name="real-problems"
+            id="real-problems"
+          ></textarea>
+        </div>
+        <div>
+          <label for="overreactions">Черезмерні реакції</label>
+          <span class="block label-desc" id="overreactions-desc"
+            >В чому я переоцінив сітуацію</span
+          >
+          <textarea
+            class="input"
+            aria-describedby="overreactions-desc"
+            name="overreactions"
+            id="overreactions"
+          ></textarea>
+        </div>
+        <div>
+          <label for="healthy-reaction">Здорова поведінка</label>
+          <span class="block label-desc" id="healthy-reaction-desc"
+            >Що я можу зробити, зберігаючи незалежність і безпеку</span
+          >
+          <textarea
+            class="input"
+            aria-describedby="healthy-reaction-desc"
+            name="healthy-reaction"
+            id="healthy-reaction"
+          ></textarea>
+        </div>
+        <button type="submit">Додати</button>
+        <button type="button" onclick="closeDialog()">Закрити</button>
+      </form>
+    </dialog>
+
+    <script>
+      var list = document.getElementById("names");
+      if (!list) {
+        throw Error("list element not found!");
+      }
+
+      var resultsName = "results";
+      var itemsFromStorage = localStorage.getItem(resultsName);
+      var getResults = () => {
+        try {
+          return JSON.parse(localStorage.getItem(resultsName));
+        } catch (err) {
+          alert("Something went wrong :(");
+          throw err;
+        }
+      };
+      var setResults = (results) => {
+        try {
+          localStorage.setItem(resultsName, JSON.stringify(results));
+        } catch (err) {
+          alert("Something went wrong :(");
+          throw err;
+        }
+      };
+
+      if (!itemsFromStorage) {
+        setResults([]);
+      }
+
+      var addItem = (item) => {
+        var { label, timestamp, inputs } = item;
+        var itemWrapper = document.createElement("li");
+        var details = document.createElement("details");
+        var summary = document.createElement("summary");
+        summary.innerText = `${label} (${timestamp})`;
+        details.appendChild(summary);
+        inputs.forEach((input) => {
+          var inputNode = document.createElement("div");
+          var inputLabel = document.createElement("span");
+          var inputValue = document.createElement("span");
+          inputLabel.innerText = input.label;
+          inputValue.innerText = input.value;
+          inputNode.appendChild(inputLabel);
+          inputNode.appendChild(inputValue);
+          details.appendChild(inputNode);
+        });
+        itemWrapper.appendChild(details);
+        list.appendChild(itemWrapper);
+      };
+
+      var populateList = () => {
+        try {
+          getResults().forEach((item) => {
+            addItem(item);
+          });
+        } catch (err) {
+          alert("Something went wrong :(");
+        }
+      };
+
+      populateList();
+    </script>
+    <script>
+      var newFormDialog = document.getElementById("new-form-dialog");
+      var newForm = document.forms["new-form"];
+
+      var openDialog = () => {
+        newFormDialog.showModal();
+      };
+      var closeDialog = () => {
+        newFormDialog.close();
+      };
+      newFormDialog.addEventListener(
+        "click",
+        (e) => {
+          if (!newForm.contains(e.target)) {
+            closeDialog();
+          }
+        },
+        false
+      );
+
+      var submitForm = (e) => {
+        e.preventDefault();
+        var inputNodes = e.target.getElementsByClassName("input");
+        var inputs = Array.from(inputNodes).reduce((acc, node) => {
+          var { value } = node;
+          var label = node.labels[0].innerText;
+          acc.push({ label, value: value ?? "" });
+          return acc;
+        }, []);
+        var newRes = {
+          label: document.getElementById("event").value ?? "Unknown event",
+          timestamp: Date.now(),
+          inputs,
+        };
+        var res = getResults();
+        res.push(newRes);
+        setResults(res);
+        closeDialog();
+        newForm.reset();
+        addItem(newRes);
+      };
+      newForm.addEventListener("submit", submitForm, false);
+    </script>
+  </body>
+</html>
