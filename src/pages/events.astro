@@ -1,0 +1,17 @@
+---
+import Layout from "../layouts/Layout.astro";
+import EventsList from "../components/EventsList.astro";
+import NewEventForm from "../components/NewEventForm.astro";
+import LoadFromLocalStore from "../components/LoadFromLocalStore.astro";
+import Auth from "../layouts/Auth.astro";
+---
+
+<Layout title="Події">
+  <Auth />
+  <main class="container stack">
+    <h1>Події</h1>
+    <EventsList />
+    <NewEventForm />
+    <LoadFromLocalStore />
+  </main>
+</Layout>

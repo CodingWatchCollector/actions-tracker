@@ -1,0 +1,44 @@
+<button id="load-from-local">Load from offline data</button>
+<script>
+  import { nanoid } from "nanoid";
+  import { getUserIdAsync } from "./AuthState.astro";
+  import { doc, setDoc } from "firebase/firestore";
+  import { db } from "../firebase/client";
+  var loadFromLocalStorage = () => {
+    var localData = JSON.parse(localStorage.getItem("results") || "[]");
+    if (!Array.isArray(localData) || localData.length === 0) {
+      alert(
+        "nothing to load, offline data is absent or not in appropriate format, sorry"
+      );
+      return;
+    }
+    var firebaseReadyData = {};
+    localData.forEach((event) => {
+      var { timestamp, inputs, label } = event;
+      firebaseReadyData[`\`${nanoid()}\``] = {
+        label,
+        created: timestamp,
+        inputs,
+      };
+    });
+    getUserIdAsync()
+      .then((userId) => {
+        if (userId) {
+          setDoc(
+            doc(db, "events", userId),
+            {
+              events: firebaseReadyData,
+            },
+            { merge: true }
+          );
+        }
+      })
+      .then(() => {
+        alert("data loaded succcessfully");
+        localStorage.removeItem("results");
+      });
+  };
+  document
+    .getElementById("load-from-local")
+    .addEventListener("click", loadFromLocalStorage, false);
+</script>

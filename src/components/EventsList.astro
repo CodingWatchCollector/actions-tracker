@@ -1,0 +1,39 @@
+<ul role="list" id="events-list"></ul>
+<div id="events-list-error" class="error"></div>
+
+<script src="./Event.astro"></script>
+<script>
+  import { db } from "../firebase/client.js";
+  import { onSnapshot, doc } from "firebase/firestore";
+  import { getUserIdAsync } from "./AuthState.astro";
+
+  getUserIdAsync()
+    .then((userId) => {
+      onSnapshot(
+        doc(db, "events", userId),
+        (doc) => {
+          var eventsListNode = document.getElementById("events-list");
+          eventsListNode.innerText = "";
+          if (doc.exists()) {
+            Object.entries(doc.data().events).forEach(([eventId, event]) => {
+              var listItem = document.createElement("li");
+              var eventDetails = document.createElement("event-details");
+              eventDetails.event = event;
+              eventDetails.eventId = eventId;
+              listItem.appendChild(eventDetails);
+              eventsListNode.appendChild(listItem);
+            });
+            return;
+          }
+          eventsListNode.innerText = "Поки що нічого немає";
+        },
+        (error) => {
+          throw error;
+        }
+      );
+    })
+    .catch((err) => {
+      var errMsg = err instanceof Error ? err.message || err : "unknown error";
+      document.getElementById("events-list-error").innerText = `${errMsg}`;
+    });
+</script>

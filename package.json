@@ -1,0 +1,20 @@
+{
+  "name": "actions-tracker",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/vercel": "^5.0.2",
+    "astro": "^3.3.2",
+    "firebase": "^10.5.0",
+    "firebase-admin": "^11.11.0",
+    "nanoid": "^5.0.2",
+    "node-mailjet": "^6.0.4"
+  }
+}

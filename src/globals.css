@@ -1,0 +1,380 @@
+/* FONTS */
+@font-face {
+  font-family: 'Fixel';
+  src: local('Fixel'), url('/fonts/FixelText-Regular.woff2') format('woff'),
+    url('/fonts/FixelText-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Fixel';
+  src: local('Fixel'), url('/fonts/FixelText-Medium.woff2') format('woff'),
+    url('/fonts/FixelText-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Fixel';
+  src: local('Fixel'), url('/fonts/FixelText-Bold.woff2') format('woff'),
+    url('/fonts/FixelText-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* RESET */
+
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Bump up focus styles */
+*:focus {
+  outline-color: currentColor;
+  outline-width: 0.2em;
+  outline-style: solid;
+}
+
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Prevent font size inflation */
+html {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+/* Remove default margin in favour of better control in authored CSS */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+}
+
+:where(ol, ul) {
+  padding: 0;
+  margin: 0;
+}
+
+/* Set core body defaults */
+body {
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* Set shorter line heights on headings and interactive elements */
+h1,
+h2,
+h3,
+h4,
+button,
+input,
+label {
+  line-height: 1.1;
+}
+
+/* Balance text wrapping on headings */
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+}
+
+/* A elements that don't have a class get default styles */
+a {
+  text-decoration: inherit;
+  color: inherit;
+  color: currentColor;
+}
+
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+/* Make images easier to work with */
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+summary {
+  cursor: pointer;
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* Make sure textareas without a rows attribute are not tiny */
+textarea:not([rows]) {
+  min-height: 5em;
+}
+
+*[hidden] {
+  display: none !important;
+}
+
+/* Anything that has been anchored to should have extra scroll margin */
+:target {
+  scroll-margin-block: 5ex;
+}
+
+dialog {
+  padding: 0;
+}
+
+:disabled {
+  cursor: default;
+}
+
+/* VARIABLES */
+
+:root {
+  --text-300: 0.75rem;
+  --text-400: 1rem;
+  --text-700: 1.5rem;
+  --text-900: 2.25rem;
+
+  --raw-clr-bg: 120 25% 95%;
+  --raw-clr-text: 180 1% 14%;
+  --clr-bg: hsl(var(--raw-clr-bg));
+  --clr-text: hsl(var(--raw-clr-text));
+
+  --space-s: 1rem;
+  --space: 1.5rem;
+  --space-l: 2.25rem;
+
+  --border-w: 0.125em;
+  --border-w-l: 0.25em;
+  --border-w-xl: 0.375em;
+  --border: var(--border-w) solid currentColor;
+  --border-l: var(--border-w-l) solid currentColor;
+  --border-r: 0.1rem;
+}
+
+/* TYPOGRAPHY */
+
+h1,
+.h1 {
+  font-size: var(--text-900);
+}
+
+.text-s {
+  font-size: var(--text-300);
+}
+
+.text-l {
+  font-size: var(--text-700);
+}
+
+.font-regular {
+  font-weight: 400;
+}
+.font-medium {
+  font-weight: 500;
+}
+.font-bold {
+  font-weight: 700;
+}
+
+/* UTILS */
+.block {
+  display: block;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.max-w-s {
+  max-width: 20rem;
+}
+
+.max-w-full {
+  max-width: 100%;
+}
+
+.w-m {
+  width: min(100vw - (var(--space) * 2), 30rem);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.stack > * {
+  margin-block: 0;
+}
+
+.stack > * + *:not(:empty) {
+  margin-block-start: var(--space, 1.5rem);
+}
+
+.stack-s > * + *:not(:empty) {
+  margin-block-start: var(--space-s, 1rem);
+}
+
+.stack-l > * + *:not(:empty) {
+  margin-block-start: var(--space-l, 2.25rem);
+}
+
+.sr-only {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-v-center {
+  align-items: center;
+}
+
+.grid {
+  display: grid;
+}
+
+.gap-s {
+  gap: var(--space-s, 1rem);
+}
+
+.gap {
+  gap: var(--space, 1.5rem);
+}
+
+.gap-l {
+  gap: var(--space-l, 2.25rem);
+}
+
+.box {
+  padding: var(--space, 1rem);
+  border: var(--border-l);
+}
+
+.error:empty {
+  display: none;
+}
+
+.error {
+  background-color: var(--clr-text);
+  color: var(--clr-bg);
+  max-width: max-content;
+  padding-inline: var(--space-s);
+  padding-block: var(--border-w-l);
+}
+
+/* COMPONENTS */
+body {
+  font-family: Fixel, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: var(--clr-text);
+  background-color: var(--clr-bg);
+}
+
+main {
+  padding-block: var(--space);
+}
+
+.container {
+  margin-inline: auto;
+  max-width: min(100% - 2 * var(--space), 60rem);
+}
+
+header {
+  border-block-end: var(--border-w-xl) dashed currentColor;
+  padding-block: var(--space-s, 1rem);
+}
+
+header nav {
+  column-gap: var(--space, 1rem);
+  row-gap: 0.25rem;
+}
+header nav > .separator {
+  margin-inline-start: auto;
+}
+
+button,
+.btn {
+  display: inline-block;
+  cursor: pointer;
+  -webkit-appearance: button;
+  background-color: transparent;
+  background-image: none;
+  border: var(--border-l);
+  border-radius: var(--border-r);
+  text-transform: none;
+  font-family: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  font-size: 100%;
+  font-weight: 700;
+  line-height: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 0.25em 1.25em;
+  max-width: max-content;
+}
+
+.btn-full {
+  width: 100%;
+  max-width: 100%;
+}
+
+modal-window:not(:defined) > button + * {
+  display: none;
+}
+
+::backdrop {
+  background-color: var(--clr-bg);
+  opacity: 0.8;
+}
+
+input,
+textarea,
+select {
+  background-color: var(--clr-bg);
+  border: 0.125em solid currentColor;
+  border-radius: var(--border-r);
+}

@@ -1,0 +1,58 @@
+<header>
+  <div class="container">
+    <nav-main></nav-main>
+  </div>
+</header>
+
+<script>
+  import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+  import { app } from "../firebase/client";
+
+  customElements.define(
+    "nav-main",
+    class extends HTMLElement {
+      constructor() {
+        super();
+        this.innerHTML = `
+  <nav aria-labelledby="nav-label--main" class="flex flex-v-center flex-wrap">
+    <div id="auth-greeting" class="text-l">Вітаю!</div>
+    <div class="separator"></div>
+    <div class="auth-logged flex gap" hidden>
+    <a href="/login" class="btn">Login</a>
+    <a href="/register" class="btn">Sign up</a>
+    </div>
+    <button id="auth-logout" hidden>Logout</button>
+  </nav>
+  <div id="nav-label--main" hidden>Main</div>
+        `;
+        var auth = getAuth(app);
+        var authenticatedBtns = this.querySelector(".auth-logged");
+        var logoutBtn = this.querySelector("#auth-logout");
+        logoutBtn.addEventListener(
+          "click",
+          (e) => {
+            signOut(auth)
+              .then(() => {})
+              .catch((err) => {
+                console.log(err);
+              });
+          },
+          false
+        );
+        onAuthStateChanged(auth, (user) => {
+          console.log("auth-state-change-event");
+          var greetingNode = this.querySelector("#auth-greeting");
+          if (user) {
+            greetingNode.innerText = `Вітаю, ${user.displayName || ""}!`;
+            authenticatedBtns.setAttribute("hidden", "");
+            logoutBtn.removeAttribute("hidden");
+          } else {
+            greetingNode.innerText = "Вітаю!";
+            logoutBtn.setAttribute("hidden", "");
+            authenticatedBtns.removeAttribute("hidden");
+          }
+        });
+      }
+    }
+  );
+</script>

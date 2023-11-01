@@ -1,0 +1,110 @@
+---
+import Header from "../layouts/Header.astro";
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Register">
+  <Header header="Реєстрація" />
+  <main class="container stack">
+    <form id="new-user-form" class="stack">
+      <div>
+        <label for="displayName" class="block">Name</label>
+        <input
+          autocomplete="given-name"
+          class="w-full max-w-s"
+          type="text"
+          name="displayName"
+          id="name"
+          required
+        />
+      </div>
+      <div>
+        <label for="email" for="email" class="block">Email</label>
+        <input
+          class="w-full max-w-s"
+          autocomplete="email"
+          type="email"
+          name="email"
+          id="email"
+          required
+        />
+      </div>
+      <div>
+        <label for="password" class="block">Password</label>
+        <input
+          class="w-full max-w-s"
+          type="password"
+          name="password"
+          id="password"
+          required
+        />
+      </div>
+      <div>
+        <label for="confirm-password" class="block">Confirm password</label>
+        <input
+          class="w-full max-w-s"
+          type="password"
+          name="confirm-password"
+          id="confirm-password"
+          required
+        />
+      </div>
+      <div id="hint" class="error"></div>
+      <button type="submit">Зареєструватись</button>
+    </form>
+    <p>
+      <span class="block">Вже є аккаунт?</span>
+      <a href="/login" class="btn block">Увійти</a>
+    </p>
+  </main>
+</Layout>
+<script>
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    updateProfile,
+  } from "firebase/auth";
+  import { app } from "../firebase/client";
+  import { printError } from "../components/scripts/utils";
+  var auth = getAuth(app);
+  auth.useDeviceLanguage();
+
+  var form = document.forms["new-user-form"];
+  var errorNode = document.getElementById("hint");
+  form.addEventListener(
+    "submit",
+    (e) => {
+      try {
+        e.preventDefault();
+        var formData = new FormData(form);
+        var email = formData.get("email");
+        var displayName = formData.get("displayName");
+        var password = formData.get("password");
+        var confirmPassword = formData.get("confirm-password");
+        if (password !== confirmPassword) {
+          printError(new Error("Passwords should match"), errorNode);
+          return;
+        }
+
+        errorNode.innerText = "";
+        createUserWithEmailAndPassword(auth, email, password)
+          .then((res) => {
+            updateProfile(res.user, { displayName })
+              .then(() => {
+                // TODO: add redirectTo to search params when navigating to this page
+                window.location.href = "/";
+              })
+              .catch((error) => {
+                printError(error, errorNode);
+              });
+          })
+          .catch((error) => {
+            printError(error, errorNode);
+          });
+      } catch (error) {
+        printError(error, errorNode);
+      }
+    },
+    false
+  );
+</script>

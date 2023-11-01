@@ -1,0 +1,186 @@
+<script src="./ModalWindow.astro"></script>
+<modal-window>
+  <button slot="dialog-open">Нова подія</button>
+  <form id="new-event-form" slot="dialog-content" class="stack box w-m">
+    <h2>Копінг-картка</h2>
+    <div>
+      <label for="event-name">Що трапилось</label>
+      <input
+        required
+        class="block w-full"
+        name="Що трапилось"
+        id="event-name"
+        autocomplete="eventName"
+      />
+    </div>
+    <div class="flex gap flex-v-center">
+      <label for="event-type">Схема</label>
+      <select id="event-type" name="Схема" required>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+        <option>6</option>
+        <option>7</option>
+        <option>8</option>
+        <option>9</option>
+        <option>10</option>
+        <option>11</option>
+      </select>
+    </div>
+    <div>
+      <label for="emotions">Емоції</label>
+      <span class="block text-s" id="emotions-desc"
+        >Що я відчуваю і що готова(ий) зробити</span
+      >
+      <textarea
+        rows="2"
+        class="w-full block"
+        name="Емоції"
+        aria-describedby="emotions-desc"
+        id="emotions"></textarea>
+    </div>
+    <div>
+      <label for="thoughts">Думки</label>
+      <span class="block text-s" id="thoughts-desc"
+        >Про що я думаю і чого боюсь</span
+      >
+      <textarea
+        rows="2"
+        class="w-full block"
+        aria-describedby="thoughts-desc"
+        name="Думки"
+        id="thoughts"></textarea>
+    </div>
+    <div>
+      <label for="actual-behavior">Фактична поведінка</label>
+      <span class="block text-s" id="actual-behavior-desc">Що я роблю</span>
+      <textarea
+        rows="2"
+        class="block w-full"
+        aria-describedby="actual-behavior-desc"
+        name="Фактична поведінка"
+        id="actual-behavior"></textarea>
+    </div>
+    <div>
+      <label for="not-satisf-needs">Які мої потреби не задоволені</label>
+      <span class="block text-s" id="not-satisf-needs-desc"
+        >Що мені потрібно щоб відчувати себе краще</span
+      >
+      <textarea
+        rows="2"
+        class="block w-full"
+        aria-describedby="not-satisf-needs-desc"
+        name="Які мої потреби не задоволені"
+        id="not-satisf-needs"></textarea>
+    </div>
+    <div>
+      <label for="care-for-needs">Як я можу подбати про свої потреби</label>
+      <span class="block text-s" id="care-for-needs-desc"
+        >Як я сам можу подбати про ці мої потреби</span
+      >
+      <textarea
+        rows="2"
+        class="block w-full"
+        aria-describedby="care-for-needs-desc"
+        name="Як я можу подбати про свої потреби"
+        id="care-for-needs"></textarea>
+    </div>
+    <div>
+      <label for="rational-view">Здоровий погляд</label>
+      <span class="block text-s" id="rational-view-desc"
+        >Що реально відбувається</span
+      >
+      <textarea
+        rows="2"
+        class="block w-full"
+        aria-describedby="rational-view-desc"
+        name="Здоровий погляд"
+        id="rational-view"></textarea>
+    </div>
+    <div>
+      <label for="real-problems">Реальні проблеми</label>
+      <span class="block text-s" id="real-problems-desc"
+        >В чому реальні труднощі</span
+      >
+      <textarea
+        rows="2"
+        class="block w-full"
+        aria-describedby="real-problems-desc"
+        name="Реальні проблеми"
+        id="real-problems"></textarea>
+    </div>
+    <div>
+      <label for="overreactions">Черезмерні реакції</label>
+      <span class="block text-s" id="overreactions-desc"
+        >В чому я переоцінив сітуацію</span
+      >
+      <textarea
+        rows="2"
+        class="block w-full"
+        aria-describedby="overreactions-desc"
+        name="Черезмерні реакції"
+        id="overreactions"></textarea>
+    </div>
+    <div>
+      <label for="healthy-reaction">Здорова поведінка</label>
+      <span class="block text-s" id="healthy-reaction-desc"
+        >Що я можу зробити, зберігаючи незалежність і безпеку</span
+      >
+      <textarea
+        rows="2"
+        class="block w-full"
+        aria-describedby="healthy-reaction-desc"
+        name="Здорова поведінка"
+        id="healthy-reaction"></textarea>
+    </div>
+    <div class="stack">
+      <button type="submit" class="btn-full">Додати</button>
+      <button type="button" class="dialog-close btn-full">Закрити</button>
+    </div>
+  </form>
+</modal-window>
+
+<script>
+  import { db } from "../firebase/client";
+  import { getUserIdAsync } from "./AuthState.astro";
+  import { doc, setDoc } from "firebase/firestore";
+  import { nanoid } from "nanoid";
+
+  var newForm = document.forms["new-event-form"];
+  newForm.addEventListener(
+    "submit",
+    (e) => {
+      e.preventDefault();
+      var formData = new FormData(newForm);
+      var inputs = [];
+      formData.forEach((value, label) => inputs.push({ label, value }));
+      getUserIdAsync()
+        .then((userId) => {
+          if (userId) {
+            setDoc(
+              doc(db, "events", userId),
+              {
+                events: {
+                  [`\`${nanoid()}\``]: {
+                    label:
+                      newForm.querySelector("#event-name").value ??
+                      "Unknown event",
+                    created: Date.now(),
+                    inputs: inputs,
+                  },
+                },
+              },
+              { merge: true }
+            );
+          }
+        })
+        .then(() => {
+          newForm.querySelector(".dialog-close").click();
+          newForm.reset();
+        });
+    },
+    false
+  );
+</script>
