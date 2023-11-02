@@ -1,7 +1,7 @@
 <button id="load-from-local">Load from offline data</button>
 <script>
   import { nanoid } from "nanoid";
-  import { getUserIdAsync } from "./AuthState.astro";
+  import { getUserIdAsync } from "./AuthState.js";
   import { doc, setDoc } from "firebase/firestore";
   import { db } from "../firebase/client";
   var loadFromLocalStorage = () => {

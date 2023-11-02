@@ -1,6 +1,6 @@
----
 import { getAuth } from "firebase/auth";
 import { app } from "../firebase/client";
+
 export var getUserIdAsync = () => {
   var auth = getAuth(app);
   return auth.authStateReady().then(() => {
@@ -11,8 +11,7 @@ export var getUserIdAsync = () => {
     return uid;
   });
 };
----
-
+/* 
 <!-- <script>
   import { getAuth, onAuthStateChanged } from "firebase/auth";
   import { app } from "../firebase/client";
@@ -35,3 +34,4 @@ export var getUserIdAsync = () => {
   customElements.define("auth-state", AuthState);
 </script>
 <auth-state></auth-state> -->
+ */

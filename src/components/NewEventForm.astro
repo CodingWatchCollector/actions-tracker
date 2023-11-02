@@ -1,4 +1,3 @@
-<script src="./ModalWindow.astro"></script>
 <modal-window>
   <button slot="dialog-open">Нова подія</button>
   <form id="new-event-form" slot="dialog-content" class="stack box w-m">
@@ -141,10 +140,11 @@
     </div>
   </form>
 </modal-window>
+<script src="./ModalWindow.js"></script>
 
 <script>
   import { db } from "../firebase/client";
-  import { getUserIdAsync } from "./AuthState.astro";
+  import { getUserIdAsync } from "./AuthState.js";
   import { doc, setDoc } from "firebase/firestore";
   import { nanoid } from "nanoid";
 

@@ -40,7 +40,6 @@
           false
         );
         onAuthStateChanged(auth, (user) => {
-          console.log("auth-state-change-event");
           var greetingNode = this.querySelector("#auth-greeting");
           if (user) {
             greetingNode.innerText = `Вітаю, ${user.displayName || ""}!`;

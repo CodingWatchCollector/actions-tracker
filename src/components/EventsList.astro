@@ -1,11 +1,11 @@
 <ul role="list" id="events-list"></ul>
 <div id="events-list-error" class="error"></div>
 
-<script src="./Event.astro"></script>
+<script src="./Event.js"></script>
 <script>
   import { db } from "../firebase/client.js";
   import { onSnapshot, doc } from "firebase/firestore";
-  import { getUserIdAsync } from "./AuthState.astro";
+  import { getUserIdAsync } from "./AuthState.js";
 
   getUserIdAsync()
     .then((userId) => {
